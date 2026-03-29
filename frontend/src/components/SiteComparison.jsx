@@ -9,7 +9,7 @@ function scoreColor(score) {
   return '#ef4444'
 }
 
-export default function SiteComparison({ sites, onRemove, useCase, openaiKey }) {
+export default function SiteComparison({ sites, onRemove, useCase, geminiKey }) {
   const [comparing, setComparing] = useState(false)
   const [comparison, setComparison] = useState(null)
   const [error, setError] = useState(null)
@@ -47,14 +47,14 @@ export default function SiteComparison({ sites, onRemove, useCase, openaiKey }) 
 
   const handleAiCompare = () => {
     if (sites.length < 2) return
-    if (!openaiKey) { setAiText('Error: Enter your OpenAI API key in the sidebar first.'); setShowAi(true); return }
+    if (!geminiKey) { setAiText('Error: Enter your Gemini API key in the sidebar first.'); setShowAi(true); return }
     setAiText('')
     setShowAi(true)
     setAiLoading(true)
     aiApi.compareSites(
       sites,
       useCase || 'retail',
-      openaiKey,
+      geminiKey,
       (chunk) => setAiText((prev) => prev + chunk),
       () => setAiLoading(false),
       (err) => { setAiText('Error: ' + err.message); setAiLoading(false) }

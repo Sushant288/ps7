@@ -51,7 +51,7 @@ const LAYER_ICONS = {
   environmental: '🌿',
 }
 
-export default function ScorePanel({ site, onPin, onClose, isochroneData, isPinned, useCase, openaiKey }) {
+export default function ScorePanel({ site, onPin, onClose, isochroneData, isPinned, useCase, geminiKey }) {
   const [expandedLayer, setExpandedLayer] = useState(null)
   const [exporting, setExporting] = useState(false)
   const [activeChart, setActiveChart] = useState('radar') // 'radar' | 'bar'

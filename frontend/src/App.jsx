@@ -26,10 +26,10 @@ const DEFAULT_WEIGHTS = USE_CASE_WEIGHTS.retail
 
 export default function App() {
   const [selectedUseCase, setSelectedUseCase] = useState('retail')
-  const [openaiKey, setOpenaiKey] = useState(() => {
+  const [geminiKey, setGeminiKey] = useState(() => {
     const stored = localStorage.getItem('gemini_key')
     if (stored) return stored
-    const defaultKey = import.meta.env.VITE_OPENAI_API_KEY || ''
+    const defaultKey = import.meta.env.VITE_GEMINI_API_KEY || ''
     if (defaultKey) localStorage.setItem('gemini_key', defaultKey)
     return defaultKey
   })
@@ -324,7 +324,7 @@ export default function App() {
                 Math.abs(s.lng - selectedSite.lng) < 0.0001
             )}
             useCase={selectedUseCase}
-            openaiKey={openaiKey}
+            geminiKey={geminiKey}
           />
         </div>
       )}
@@ -335,7 +335,7 @@ export default function App() {
           className="absolute bottom-0 glass-panel border-t border-slate-700/60 z-20"
           style={{ left: '320px', right: selectedSite ? '384px' : '0' }}
         >
-          <SiteComparison sites={pinnedSites} onRemove={handleRemovePinnedSite} useCase={selectedUseCase} openaiKey={openaiKey} />
+          <SiteComparison sites={pinnedSites} onRemove={handleRemovePinnedSite} useCase={selectedUseCase} geminiKey={geminiKey} />
         </div>
       )}
     </div>

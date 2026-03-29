@@ -18,7 +18,7 @@ function boldify(text) {
     .replace(/`([^`]+)`/g, '<code class="bg-slate-700 text-blue-300 px-1 rounded text-xs">$1</code>')
 }
 
-export default function AIAnalysisPanel({ site, useCase, openaiKey }) {
+export default function AIAnalysisPanel({ site, useCase, geminiKey }) {
   const [mode, setMode] = useState(null)
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
@@ -31,9 +31,9 @@ export default function AIAnalysisPanel({ site, useCase, openaiKey }) {
   }, [text])
 
   const startAnalysis = () => {
-    if (!openaiKey) { setError('Enter your OpenAI API key in the sidebar first.'); return }
+    if (!geminiKey) { setError('Enter your Gemini API key in the sidebar first.'); return }
     setText(''); setError(null); setMode('analysis'); setLoading(true)
-    aiApi.analyzeSite(site, useCase, openaiKey,
+    aiApi.analyzeSite(site, useCase, geminiKey,
       (chunk) => setText((prev) => prev + chunk),
       () => setLoading(false),
       (err) => { setError(err.message); setLoading(false) }
@@ -42,9 +42,9 @@ export default function AIAnalysisPanel({ site, useCase, openaiKey }) {
 
   const startQuery = () => {
     if (!question.trim()) return
-    if (!openaiKey) { setError('Enter your OpenAI API key in the sidebar first.'); return }
+    if (!geminiKey) { setError('Enter your Gemini API key in the sidebar first.'); return }
     setText(''); setError(null); setMode('query'); setLoading(true)
-    aiApi.querySite(question, site, useCase, openaiKey,
+    aiApi.querySite(question, site, useCase, geminiKey,
       (chunk) => setText((prev) => prev + chunk),
       () => setLoading(false),
       (err) => { setError(err.message); setLoading(false) }
