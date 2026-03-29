@@ -315,7 +315,7 @@ export default function ScorePanel({ site, onPin, onClose, isochroneData, isPinn
       )}
 
       {/* AI Analysis */}
-      <AIAnalysisPanel site={site} useCase={useCase || 'retail'} openaiKey={openaiKey} />
+      <AIAnalysisPanel site={site} useCase={useCase || 'retail'} geminiKey={geminiKey} />
 
       {/* Recommendations */}
       <div className="mb-4">
