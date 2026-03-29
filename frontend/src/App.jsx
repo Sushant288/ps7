@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import Map from './components/Map'
 import LayerPanel from './components/LayerPanel'
 import ScorePanel from './components/ScorePanel'
@@ -47,6 +47,31 @@ export default function App() {
   const [drawnPolygon, setDrawnPolygon] = useState(null)
   const [error, setError] = useState(null)
 
+  const selectedLocRef = useRef(null)
+  useEffect(() => {
+    if (selectedSite) {
+      selectedLocRef.current = { lat: selectedSite.lat, lng: selectedSite.lng }
+    } else {
+      selectedLocRef.current = null
+    }
+  }, [selectedSite])
+
+  useEffect(() => {
+    if (!selectedLocRef.current) return
+    const timer = setTimeout(async () => {
+      setIsScoring(true)
+      try {
+        const { lat, lng } = selectedLocRef.current
+        const res = await api.scoresite(lat, lng, selectedUseCase, weights)
+        setSelectedSite(res.data)
+      } catch (err) {
+        console.error('Re-scoring failed:', err)
+      } finally {
+        setIsScoring(false)
+      }
+    }, 600)
+    return () => clearTimeout(timer)
+  }, [weights, selectedUseCase])
   const handleMapClick = useCallback(
     async (lat, lng) => {
       setIsScoring(true)
