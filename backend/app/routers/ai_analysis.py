@@ -10,6 +10,7 @@ from app.services.ai_service import (
     stream_site_comparison,
     stream_site_query,
 )
+from app.config import settings
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -45,8 +46,8 @@ SSE_HEADERS = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connecti
 
 @router.post("/analyze")
 async def ai_analyze_site(req: AnalyzeRequest, x_gemini_key: Optional[str] = Header(default=None)):
-    if not x_gemini_key:
-        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI.")
+    if not x_gemini_key and not settings.gemini_api_key:
+        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI or set it in backend .env.")
     try:
         return StreamingResponse(_sse(stream_site_analysis(req.site, req.use_case, x_gemini_key)),
                                  media_type="text/event-stream", headers=SSE_HEADERS)
@@ -56,8 +57,8 @@ async def ai_analyze_site(req: AnalyzeRequest, x_gemini_key: Optional[str] = Hea
 
 @router.post("/compare")
 async def ai_compare_sites(req: CompareRequest, x_gemini_key: Optional[str] = Header(default=None)):
-    if not x_gemini_key:
-        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI.")
+    if not x_gemini_key and not settings.gemini_api_key:
+        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI or set it in backend .env.")
     if len(req.sites) < 2:
         raise HTTPException(status_code=400, detail="Need at least 2 sites to compare")
     try:
@@ -71,8 +72,8 @@ async def ai_compare_sites(req: CompareRequest, x_gemini_key: Optional[str] = He
 async def ai_query_site(req: QueryRequest, x_gemini_key: Optional[str] = Header(default=None)):
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
-    if not x_gemini_key:
-        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI.")
+    if not x_gemini_key and not settings.gemini_api_key:
+        raise HTTPException(status_code=400, detail="Gemini API key required. Enter it in the UI or set it in backend .env.")
     try:
         return StreamingResponse(_sse(stream_site_query(req.question, req.site, req.use_case, x_gemini_key)),
                                  media_type="text/event-stream", headers=SSE_HEADERS)

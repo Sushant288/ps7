@@ -5,6 +5,7 @@ Provides streaming site analysis, site comparison, and natural language Q&A.
 from typing import Generator
 from google import genai
 from app.models.schemas import SiteReadinessScore
+from app.config import settings
 
 MODEL = "gemini-2.5-flash"
 
@@ -20,9 +21,10 @@ Format your responses with clear ## headers and bullet points for readability.""
 
 
 def get_client(api_key: str) -> genai.Client:
-    if not api_key:
+    key_to_use = api_key or settings.gemini_api_key
+    if not key_to_use:
         raise RuntimeError("Gemini API key not provided.")
-    return genai.Client(api_key=api_key)
+    return genai.Client(api_key=key_to_use)
 
 
 def _format_breakdown(site: SiteReadinessScore) -> str:
